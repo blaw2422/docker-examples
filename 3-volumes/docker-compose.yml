@@ -1,0 +1,22 @@
+version: '2'
+services:
+  api:
+    build: ./
+    command: ./node_modules/.bin/nodemon --debug=5858 app.js
+    ports:
+      - "8000:8000"
+      - "5858:5858"
+    links:
+      - redis
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./:/app
+      - /app/node_modules
+  redis:
+    image: redis
+    ports:
+      - "8001:6379"

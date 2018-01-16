@@ -1,0 +1,30 @@
+version: '2'
+services:
+  api:
+    build: 
+      context: ./js-app
+    command: ./node_modules/.bin/nodemon --debug=5858 app.js
+    #command: cat app.js 
+    ports:
+      - "8000:8000"
+      - "5858:5858"
+    links:
+      - redis
+      - python-service
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./js-app:/app
+      - /app/node_modules
+  redis:
+    image: redis
+    ports:
+      - "8001:6379"
+  python-service:
+    build:
+      context: ./python-app
+    ports: 
+      - "8002:5000"
